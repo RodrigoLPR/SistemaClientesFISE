@@ -88,4 +88,81 @@ public class ClienteDAO {
 
         return total;
     }
+        public Cliente obtenerClientePorId(int idCliente) {
+        Cliente cliente = null;
+
+        String sql = "SELECT id_cliente, dni, nombres, apellidos, direccion, telefono, correo, estado, id_usuario "
+                   + "FROM cliente WHERE id_cliente = ?";
+
+        try (Connection conn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idCliente);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    cliente = new Cliente();
+
+                    cliente.setIdCliente(rs.getInt("id_cliente"));
+                    cliente.setDni(rs.getString("dni"));
+                    cliente.setNombres(rs.getString("nombres"));
+                    cliente.setApellidos(rs.getString("apellidos"));
+                    cliente.setDireccion(rs.getString("direccion"));
+                    cliente.setTelefono(rs.getString("telefono"));
+                    cliente.setCorreo(rs.getString("correo"));
+                    cliente.setEstado(rs.getString("estado"));
+                    cliente.setIdUsuario(rs.getInt("id_usuario"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cliente;
+    }
+
+    public boolean actualizarCliente(Cliente cliente) {
+        String sql = "UPDATE cliente SET dni = ?, nombres = ?, apellidos = ?, direccion = ?, "
+                   + "telefono = ?, correo = ?, estado = ? WHERE id_cliente = ?";
+
+        try (Connection conn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, cliente.getDni());
+            ps.setString(2, cliente.getNombres());
+            ps.setString(3, cliente.getApellidos());
+            ps.setString(4, cliente.getDireccion());
+            ps.setString(5, cliente.getTelefono());
+            ps.setString(6, cliente.getCorreo());
+            ps.setString(7, cliente.getEstado());
+            ps.setInt(8, cliente.getIdCliente());
+
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean eliminarCliente(int idCliente) {
+        String sql = "DELETE FROM cliente WHERE id_cliente = ?";
+
+        try (Connection conn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idCliente);
+
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    
 }
