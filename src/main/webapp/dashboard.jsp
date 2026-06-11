@@ -1,5 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="com.ayf.sistemaclientesfise.model.Usuario"%>
+<%@page import="com.ayf.sistemaclientesfise.dao.ClienteDAO"%>
+<%@page import="com.ayf.sistemaclientesfise.dao.ClienteDAO"%>
+
 <%
     Usuario usuario = (Usuario) session.getAttribute("usuario");
 
@@ -7,6 +10,9 @@
         response.sendRedirect("login.jsp");
         return;
     }
+    
+ClienteDAO clienteDAO = new ClienteDAO();
+int totalClientes = clienteDAO.contarClientes();
 %>
 <!DOCTYPE html>
 <html>
@@ -103,7 +109,7 @@
         <div class="cards">
             <div class="card">
                 <h3>Clientes Registrados</h3>
-                <p>0</p>
+                <p><%= totalClientes %></p>
             </div>
 
             <div class="card">

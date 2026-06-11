@@ -68,4 +68,24 @@ public class ClienteDAO {
 
         return lista;
     }
+
+    public int contarClientes() {
+        int total = 0;
+
+        String sql = "SELECT COUNT(*) AS total FROM cliente";
+
+        try (Connection conn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return total;
+    }
 }
