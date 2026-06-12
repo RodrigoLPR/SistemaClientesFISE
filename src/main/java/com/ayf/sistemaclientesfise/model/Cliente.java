@@ -11,6 +11,7 @@ public class Cliente {
     private String correo;
     private String estado;
     private int idUsuario;
+    private int edad;
 
     public Cliente() {
     }
