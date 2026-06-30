@@ -143,6 +143,12 @@
             <div class="box">
                 <h1>Gestión de Clientes</h1>
                 <p>Listado de potenciales clientes FISE registrados en el sistema.</p>
+                <div style="margin:20px 0;">
+                    <input type="text"
+                           id="buscarCliente"
+                           placeholder="Buscar por DNI, nombres o apellidos..."
+                           style="width:350px;padding:10px;border:1px solid #ccc;border-radius:8px;">
+                </div>
 
                 <% if (clientes == null || clientes.isEmpty()) { %>
 
@@ -163,6 +169,8 @@
                             <th>Teléfono</th>
                             <th>Correo</th>
                             <th>Estado</th>
+                            <th>Observación</th>
+                            <th>Fecha Registro</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -176,8 +184,32 @@
                             <td><%= cliente.getDireccion()%></td>
                             <td><%= cliente.getTelefono()%></td>
                             <td><%= cliente.getCorreo()%></td>
-                            <td class="estado"><%= cliente.getEstado()%></td>
+<td>
 
+<%
+
+String color="#2563eb";
+
+if(cliente.getEstado().equals("Aprobado"))
+    color="#16a34a";
+
+else if(cliente.getEstado().equals("Observado"))
+    color="#dc2626";
+
+else if(cliente.getEstado().equals("Pendiente"))
+    color="#d97706";
+
+%>
+
+<span style="font-weight:bold;color:<%=color%>;">
+<%=cliente.getEstado()%>
+</span>
+
+</td>
+
+<td><%=cliente.getObservacion()%></td>
+
+<td><%=cliente.getFechaRegistro()%></td>
                             <td>
                                 <a class="btn-editar" href="editarCliente.jsp?id=<%= cliente.getIdCliente()%>">Editar</a>
                                 <a class="btn-eliminar" href="cliente?accion=eliminar&id=<%= cliente.getIdCliente()%>"

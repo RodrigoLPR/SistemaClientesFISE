@@ -23,7 +23,7 @@ public class ClienteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         Usuario usuario = null;
 
@@ -39,6 +39,7 @@ public class ClienteServlet extends HttpServlet {
         String accion = request.getParameter("accion");
 
         if ("eliminar".equals(accion)) {
+
             int idCliente = Integer.parseInt(request.getParameter("id"));
 
             boolean eliminado = clienteDAO.eliminarCliente(idCliente);
@@ -81,10 +82,13 @@ public class ClienteServlet extends HttpServlet {
         String telefono = request.getParameter("telefono");
         String correo = request.getParameter("correo");
         String estado = request.getParameter("estado");
+        String observacion = request.getParameter("observacion");
 
         try {
             ValidadorCliente.validarDatosCliente(dni, nombres, apellidos, direccion);
+
         } catch (IllegalArgumentException e) {
+
             request.setAttribute("error", e.getMessage());
 
             if ("actualizar".equals(accion)) {
@@ -96,6 +100,7 @@ public class ClienteServlet extends HttpServlet {
         }
 
         Cliente cliente = new Cliente();
+
         cliente.setDni(dni);
         cliente.setNombres(nombres);
         cliente.setApellidos(apellidos);
@@ -103,30 +108,39 @@ public class ClienteServlet extends HttpServlet {
         cliente.setTelefono(telefono);
         cliente.setCorreo(correo);
         cliente.setEstado(estado);
+        cliente.setObservacion(observacion);
         cliente.setIdUsuario(usuario.getIdUsuario());
 
         if ("actualizar".equals(accion)) {
+
             int idCliente = Integer.parseInt(request.getParameter("idCliente"));
             cliente.setIdCliente(idCliente);
 
             boolean actualizado = clienteDAO.actualizarCliente(cliente);
 
             if (actualizado) {
+
                 logger.info("Cliente actualizado correctamente. ID: {}", idCliente);
                 response.sendRedirect("gestionClientes.jsp");
+
             } else {
+
                 logger.error("No se pudo actualizar el cliente. ID: {}", idCliente);
                 request.setAttribute("error", "No se pudo actualizar el cliente");
                 request.getRequestDispatcher("editarCliente.jsp").forward(request, response);
             }
 
         } else {
+
             boolean registrado = clienteDAO.registrarCliente(cliente);
 
             if (registrado) {
+
                 logger.info("Cliente registrado correctamente con DNI: {}", dni);
                 request.setAttribute("mensaje", "Cliente registrado correctamente");
+
             } else {
+
                 logger.error("No se pudo registrar el cliente con DNI: {}", dni);
                 request.setAttribute("error", "No se pudo registrar el cliente");
             }

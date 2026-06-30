@@ -10,25 +10,27 @@ public class Cliente {
     private String telefono;
     private String correo;
     private String estado;
+    private String observacion;
     private int idUsuario;
-    private int edad;
 
     public Cliente() {
     }
 
     public Cliente(int idCliente, String dni, String nombres, String apellidos,
-                   String direccion, String telefono, String correo,
-                   String estado, int idUsuario) {
-        this.idCliente = idCliente;
-        this.dni = dni;
-        this.nombres = nombres;
-        this.apellidos = apellidos;
-        this.direccion = direccion;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.estado = estado;
-        this.idUsuario = idUsuario;
-    }
+               String direccion, String telefono, String correo,
+               String estado, String observacion, int idUsuario) {
+
+    this.idCliente = idCliente;
+    this.dni = dni;
+    this.nombres = nombres;
+    this.apellidos = apellidos;
+    this.direccion = direccion;
+    this.telefono = telefono;
+    this.correo = correo;
+    this.estado = estado;
+    this.observacion = observacion;
+    this.idUsuario = idUsuario;
+}
 
     public int getIdCliente() {
         return idCliente;
@@ -93,6 +95,15 @@ public class Cliente {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+    
+    public String getObservacion() {
+    return observacion;
+}
+
+public void setObservacion(String observacion) {
+    this.observacion = observacion;
+}
+
 
     public int getIdUsuario() {
         return idUsuario;
