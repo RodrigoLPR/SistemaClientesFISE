@@ -11,26 +11,30 @@ public class Cliente {
     private String correo;
     private String estado;
     private String observacion;
+    private String fechaRegistro;
     private int idUsuario;
-
+    
     public Cliente() {
     }
 
-    public Cliente(int idCliente, String dni, String nombres, String apellidos,
-               String direccion, String telefono, String correo,
-               String estado, String observacion, int idUsuario) {
+    public Cliente(int idCliente, String dni, String nombres,
+            String apellidos, String direccion,
+            String telefono, String correo,
+            String estado, String observacion,
+            String fechaRegistro, int idUsuario) {
 
-    this.idCliente = idCliente;
-    this.dni = dni;
-    this.nombres = nombres;
-    this.apellidos = apellidos;
-    this.direccion = direccion;
-    this.telefono = telefono;
-    this.correo = correo;
-    this.estado = estado;
-    this.observacion = observacion;
-    this.idUsuario = idUsuario;
-}
+        this.idCliente = idCliente;
+        this.dni = dni;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.estado = estado;
+        this.observacion = observacion;
+        this.fechaRegistro = fechaRegistro;
+        this.idUsuario = idUsuario;
+    }
 
     public int getIdCliente() {
         return idCliente;
@@ -95,15 +99,22 @@ public class Cliente {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-    
+
     public String getObservacion() {
-    return observacion;
-}
+        return observacion;
+    }
 
-public void setObservacion(String observacion) {
-    this.observacion = observacion;
-}
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
 
+    public String getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(String fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
 
     public int getIdUsuario() {
         return idUsuario;
@@ -112,4 +123,5 @@ public void setObservacion(String observacion) {
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
+
 }

@@ -26,11 +26,7 @@ public class ReporteClientesServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        Usuario usuario = null;
-
-        if (session != null) {
-            usuario = (Usuario) session.getAttribute("usuario");
-        }
+        Usuario usuario = (usuario = (session != null) ? (Usuario) session.getAttribute("usuario") : null);
 
         if (usuario == null) {
             response.sendRedirect("login.jsp");
@@ -42,6 +38,7 @@ public class ReporteClientesServlet extends HttpServlet {
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet("Clientes FISE");
 
+        // 1. Crear encabezados
         Row header = sheet.createRow(0);
         header.createCell(0).setCellValue("ID");
         header.createCell(1).setCellValue("DNI");
@@ -51,9 +48,11 @@ public class ReporteClientesServlet extends HttpServlet {
         header.createCell(5).setCellValue("Telefono");
         header.createCell(6).setCellValue("Correo");
         header.createCell(7).setCellValue("Estado");
+        header.createCell(8).setCellValue("Observación"); // <--- Nueva columna
 
         int fila = 1;
 
+        // 2. Llenar datos
         for (Cliente cliente : clientes) {
             Row row = sheet.createRow(fila++);
 
@@ -65,9 +64,11 @@ public class ReporteClientesServlet extends HttpServlet {
             row.createCell(5).setCellValue(cliente.getTelefono());
             row.createCell(6).setCellValue(cliente.getCorreo());
             row.createCell(7).setCellValue(cliente.getEstado());
+            row.createCell(8).setCellValue(cliente.getObservacion() != null ? cliente.getObservacion() : ""); // <--- Nuevo dato
         }
 
-        for (int i = 0; i <= 7; i++) {
+        // 3. Ajustar tamaño de todas las columnas (ahora hasta la 8)
+        for (int i = 0; i <= 8; i++) {
             sheet.autoSizeColumn(i);
         }
 

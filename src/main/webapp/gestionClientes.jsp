@@ -3,227 +3,92 @@
 <%@page import="com.ayf.sistemaclientesfise.model.Cliente"%>
 <%@page import="com.ayf.sistemaclientesfise.dao.ClienteDAO"%>
 <%@page import="java.util.List"%>
-
 <%
     Usuario usuario = (Usuario) session.getAttribute("usuario");
-
     if (usuario == null) {
         response.sendRedirect("login.jsp");
         return;
     }
-
     ClienteDAO clienteDAO = new ClienteDAO();
     List<Cliente> clientes = clienteDAO.listarClientes();
 %>
-
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Gestión de Clientes - Sistema Clientes FISE</title>
-        <style>
-            body {
-                margin: 0;
-                font-family: Arial, sans-serif;
-                background: #f5f7fa;
-            }
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Clientes - FISE A&F</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .sidebar { min-height: 100vh; background-color: #1e3a8a; }
+        .sidebar a { color: #cfd8dc; transition: 0.3s; }
+        .sidebar a:hover, .sidebar a.active { color: #ffffff; background-color: rgba(255,255,255,0.1); border-radius: 5px;}
+        .table-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
 
-            .sidebar {
-                width: 260px;
-                height: 100vh;
-                background: #1e3a8a;
-                color: white;
-                position: fixed;
-                padding: 25px;
-                box-sizing: border-box;
-            }
-
-            .sidebar h2 {
-                font-size: 22px;
-                margin-bottom: 40px;
-            }
-
-            .sidebar a {
-                display: block;
-                color: white;
-                text-decoration: none;
-                margin: 18px 0;
-                font-size: 16px;
-            }
-
-            .content {
-                margin-left: 260px;
-                padding: 35px;
-            }
-
-            .box {
-                background: white;
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            }
-
-            h1 {
-                margin-top: 0;
-                color: #111827;
-            }
-
-            p {
-                color: #4b5563;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 25px;
-                font-size: 14px;
-            }
-
-            th {
-                background: #1e3a8a;
-                color: white;
-                padding: 12px;
-                text-align: left;
-            }
-
-            td {
-                padding: 11px;
-                border-bottom: 1px solid #e5e7eb;
-            }
-
-            tr:hover {
-                background: #f9fafb;
-            }
-
-            .estado {
-                font-weight: bold;
-                color: #2563eb;
-            }
-
-            .btn-editar {
-                padding: 7px 12px;
-                background: #2563eb;
-                color: white;
-                text-decoration: none;
-                border-radius: 6px;
-                font-size: 13px;
-                margin-right: 6px;
-            }
-
-            .btn-eliminar {
-                padding: 7px 12px;
-                background: #dc2626;
-                color: white;
-                text-decoration: none;
-                border-radius: 6px;
-                font-size: 13px;
-            }
-
-            .sin-datos {
-                margin-top: 25px;
-                padding: 15px;
-                background: #fef3c7;
-                color: #92400e;
-                border-radius: 8px;
-            }
-        </style>
-    </head>
-    <body>
-
-        <div class="sidebar">
-            <h2>Sistema Clientes<br>FISE - A&F</h2>
-            <a href="dashboard.jsp">Dashboard</a>
-            <a href="registroCliente.jsp">Registrar Cliente</a>
-            <a href="gestionClientes.jsp">Gestión de Clientes</a>
-            <a href="reportes.jsp">Reportes</a>
-            <a href="logout">Cerrar Sesión</a>
-        </div>
-
-        <div class="content">
-            <div class="box">
-                <h1>Gestión de Clientes</h1>
-                <p>Listado de potenciales clientes FISE registrados en el sistema.</p>
-                <div style="margin:20px 0;">
-                    <input type="text"
-                           id="buscarCliente"
-                           placeholder="Buscar por DNI, nombres o apellidos..."
-                           style="width:350px;padding:10px;border:1px solid #ccc;border-radius:8px;">
-                </div>
-
-                <% if (clientes == null || clientes.isEmpty()) { %>
-
-                <div class="sin-datos">
-                    No existen clientes registrados.
-                </div>
-
-                <% } else { %>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>DNI</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Dirección</th>
-                            <th>Teléfono</th>
-                            <th>Correo</th>
-                            <th>Estado</th>
-                            <th>Observación</th>
-                            <th>Fecha Registro</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% for (Cliente cliente : clientes) {%>
-                        <tr>
-                            <td><%= cliente.getIdCliente()%></td>
-                            <td><%= cliente.getDni()%></td>
-                            <td><%= cliente.getNombres()%></td>
-                            <td><%= cliente.getApellidos()%></td>
-                            <td><%= cliente.getDireccion()%></td>
-                            <td><%= cliente.getTelefono()%></td>
-                            <td><%= cliente.getCorreo()%></td>
-<td>
-
-<%
-
-String color="#2563eb";
-
-if(cliente.getEstado().equals("Aprobado"))
-    color="#16a34a";
-
-else if(cliente.getEstado().equals("Observado"))
-    color="#dc2626";
-
-else if(cliente.getEstado().equals("Pendiente"))
-    color="#d97706";
-
-%>
-
-<span style="font-weight:bold;color:<%=color%>;">
-<%=cliente.getEstado()%>
-</span>
-
-</td>
-
-<td><%=cliente.getObservacion()%></td>
-
-<td><%=cliente.getFechaRegistro()%></td>
-                            <td>
-                                <a class="btn-editar" href="editarCliente.jsp?id=<%= cliente.getIdCliente()%>">Editar</a>
-                                <a class="btn-eliminar" href="cliente?accion=eliminar&id=<%= cliente.getIdCliente()%>"
-                                   onclick="return confirm('¿Está seguro de eliminar este cliente?');">Eliminar</a>
-                            </td>
-
-                        </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-
-                <% }%>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar py-4 px-3">
+            <div class="text-center mb-4 text-white">
+                <i class="fas fa-fire-flame-curved fa-3x mb-2 text-warning"></i>
+                <h5 class="fw-bold">FISE - A&F</h5>
             </div>
-        </div>
+            <ul class="nav flex-column gap-2 mt-4">
+                <li class="nav-item"><a class="nav-link" href="dashboard.jsp"><i class="fas fa-home me-2"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="registroCliente.jsp"><i class="fas fa-user-plus me-2"></i> Registrar Cliente</a></li>
+                <li class="nav-item"><a class="nav-link active text-white fw-bold" href="gestionClientes.jsp"><i class="fas fa-users me-2"></i> Gestión de Clientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="reportes.jsp"><i class="fas fa-chart-bar me-2"></i> Reportes</a></li>
+                <li class="nav-item mt-4"><a class="nav-link text-danger" href="logout"><i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
 
-    </body>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div class="d-flex justify-content-between pb-2 mb-4 border-bottom">
+                <h1 class="h2 text-dark fw-bold">Listado de Clientes</h1>
+            </div>
+
+            <div class="table-container table-responsive">
+                <% if (clientes == null || clientes.isEmpty()) { %>
+                    <div class="alert alert-warning">No existen clientes registrados.</div>
+                <% } else { %>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th><th>DNI</th><th>Nombres</th><th>Apellidos</th>
+                                <th>Dirección</th><th>Teléfono</th><th>Estado</th><th>Observación</th><th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (Cliente c : clientes) { %>
+                            <tr>
+                                <td><%= c.getIdCliente() %></td>
+                                <td><%= c.getDni() %></td>
+                                <td class="fw-bold"><%= c.getNombres() %></td>
+                                <td><%= c.getApellidos() %></td>
+                                <td><%= c.getDireccion() %></td>
+                                <td><%= c.getTelefono() %></td>
+                                <td>
+                                    <span class="badge <%= c.getEstado().equals("Aprobado") ? "bg-success" : (c.getEstado().equals("Observado") ? "bg-danger" : "bg-warning") %>">
+                                        <%= c.getEstado() %>
+                                    </span>
+                                </td>
+                                <td class="text-muted small"><%= c.getObservacion() != null ? c.getObservacion() : "-" %></td>
+                                <td>
+                                    <a href="editarCliente.jsp?id=<%= c.getIdCliente() %>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                                    <a href="cliente?accion=eliminar&id=<%= c.getIdCliente() %>" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar cliente?');"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

@@ -25,11 +25,7 @@ public class ClienteServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        Usuario usuario = null;
-
-        if (session != null) {
-            usuario = (Usuario) session.getAttribute("usuario");
-        }
+        Usuario usuario = (session != null) ? (Usuario) session.getAttribute("usuario") : null;
 
         if (usuario == null) {
             response.sendRedirect("login.jsp");
@@ -39,17 +35,13 @@ public class ClienteServlet extends HttpServlet {
         String accion = request.getParameter("accion");
 
         if ("eliminar".equals(accion)) {
-
-            int idCliente = Integer.parseInt(request.getParameter("id"));
-
-            boolean eliminado = clienteDAO.eliminarCliente(idCliente);
-
-            if (eliminado) {
+            try {
+                int idCliente = Integer.parseInt(request.getParameter("id"));
+                clienteDAO.eliminarCliente(idCliente);
                 logger.info("Cliente eliminado correctamente. ID: {}", idCliente);
-            } else {
-                logger.error("No se pudo eliminar el cliente. ID: {}", idCliente);
+            } catch (Exception e) {
+                logger.error("Error al eliminar cliente: {}", e.getMessage());
             }
-
             response.sendRedirect("gestionClientes.jsp");
             return;
         }
@@ -62,11 +54,7 @@ public class ClienteServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        Usuario usuario = null;
-
-        if (session != null) {
-            usuario = (Usuario) session.getAttribute("usuario");
-        }
+        Usuario usuario = (session != null) ? (Usuario) session.getAttribute("usuario") : null;
 
         if (usuario == null) {
             response.sendRedirect("login.jsp");
@@ -74,7 +62,6 @@ public class ClienteServlet extends HttpServlet {
         }
 
         String accion = request.getParameter("accion");
-
         String dni = request.getParameter("dni");
         String nombres = request.getParameter("nombres");
         String apellidos = request.getParameter("apellidos");
@@ -86,11 +73,8 @@ public class ClienteServlet extends HttpServlet {
 
         try {
             ValidadorCliente.validarDatosCliente(dni, nombres, apellidos, direccion);
-
         } catch (IllegalArgumentException e) {
-
             request.setAttribute("error", e.getMessage());
-
             if ("actualizar".equals(accion)) {
                 request.getRequestDispatcher("editarCliente.jsp").forward(request, response);
             } else {
@@ -100,7 +84,6 @@ public class ClienteServlet extends HttpServlet {
         }
 
         Cliente cliente = new Cliente();
-
         cliente.setDni(dni);
         cliente.setNombres(nombres);
         cliente.setApellidos(apellidos);
@@ -109,43 +92,32 @@ public class ClienteServlet extends HttpServlet {
         cliente.setCorreo(correo);
         cliente.setEstado(estado);
         cliente.setObservacion(observacion);
-        cliente.setIdUsuario(usuario.getIdUsuario());
+        
+        // LÍNEA CORREGIDA: Se envía el ID del usuario activo para cumplir con la restricción de la BD
+        cliente.setIdUsuario(usuario.getIdUsuario()); 
 
-        if ("actualizar".equals(accion)) {
-
-            int idCliente = Integer.parseInt(request.getParameter("idCliente"));
-            cliente.setIdCliente(idCliente);
-
-            boolean actualizado = clienteDAO.actualizarCliente(cliente);
-
-            if (actualizado) {
-
+        try {
+            if ("actualizar".equals(accion)) {
+                int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+                cliente.setIdCliente(idCliente);
+                clienteDAO.actualizarCliente(cliente);
                 logger.info("Cliente actualizado correctamente. ID: {}", idCliente);
                 response.sendRedirect("gestionClientes.jsp");
 
             } else {
-
-                logger.error("No se pudo actualizar el cliente. ID: {}", idCliente);
-                request.setAttribute("error", "No se pudo actualizar el cliente");
-                request.getRequestDispatcher("editarCliente.jsp").forward(request, response);
-            }
-
-        } else {
-
-            boolean registrado = clienteDAO.registrarCliente(cliente);
-
-            if (registrado) {
-
+                clienteDAO.registrarCliente(cliente);
                 logger.info("Cliente registrado correctamente con DNI: {}", dni);
                 request.setAttribute("mensaje", "Cliente registrado correctamente");
-
-            } else {
-
-                logger.error("No se pudo registrar el cliente con DNI: {}", dni);
-                request.setAttribute("error", "No se pudo registrar el cliente");
+                request.getRequestDispatcher("registroCliente.jsp").forward(request, response);
             }
-
-            request.getRequestDispatcher("registroCliente.jsp").forward(request, response);
+        } catch (Exception e) {
+            logger.error("Error en la operación del cliente: {}", e.getMessage());
+            request.setAttribute("error", "Error al procesar la operación");
+            if ("actualizar".equals(accion)) {
+                request.getRequestDispatcher("editarCliente.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("registroCliente.jsp").forward(request, response);
+            }
         }
     }
 }
