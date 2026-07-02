@@ -15,6 +15,18 @@
         response.sendRedirect("gestionClientes.jsp");
         return;
     }
+    
+    // Arreglo completo con los 43 distritos de Lima Metropolitana
+    String[] distritos = {
+        "Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Chaclacayo", "Chorrillos", 
+        "Cieneguilla", "Comas", "El Agustino", "Independencia", "Jesús María", "La Molina", 
+        "La Victoria", "Lima", "Lince", "Los Olivos", "Lurigancho", "Lurín", "Magdalena del Mar", 
+        "Miraflores", "Pachacámac", "Pucusana", "Pueblo Libre", "Puente Piedra", "Punta Hermosa", 
+        "Punta Negra", "Rímac", "San Bartolo", "San Borja", "San Isidro", "San Juan de Lurigancho", 
+        "San Juan de Miraflores", "San Luis", "San Martín de Porres", "San Miguel", "Santa Anita", 
+        "Santa María del Mar", "Santa Rosa", "Santiago de Surco", "Surquillo", "Villa El Salvador", 
+        "Villa María del Triunfo"
+    };
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -28,7 +40,7 @@
         body { background-color: #f8f9fa; }
         .sidebar { min-height: 100vh; background-color: #1e3a8a; }
         .sidebar a { color: #cfd8dc; transition: 0.3s; }
-        .sidebar a:hover { color: #ffffff; background-color: rgba(255,255,255,0.1); border-radius: 5px;}
+        .sidebar a:hover, .sidebar a.active { color: #ffffff; background-color: rgba(255,255,255,0.1); border-radius: 5px;}
         .form-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     </style>
 </head>
@@ -42,21 +54,11 @@
                 <h5 class="fw-bold">FISE - A&F</h5>
             </div>
             <ul class="nav flex-column gap-2 mt-4">
-                <li class="nav-item">
-                    <a class="nav-link" href="dashboard.jsp"><i class="fas fa-home me-2"></i> Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="registroCliente.jsp"><i class="fas fa-user-plus me-2"></i> Registrar Cliente</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active text-white fw-bold" href="gestionClientes.jsp"><i class="fas fa-users me-2"></i> Gestión de Clientes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="reportes.jsp"><i class="fas fa-chart-bar me-2"></i> Reportes</a>
-                </li>
-                <li class="nav-item mt-4">
-                    <a class="nav-link text-danger" href="logout"><i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="dashboard.jsp"><i class="fas fa-home me-2"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="registroCliente.jsp"><i class="fas fa-user-plus me-2"></i> Registrar Cliente</a></li>
+                <li class="nav-item"><a class="nav-link active text-white fw-bold" href="gestionClientes.jsp"><i class="fas fa-users me-2"></i> Gestión de Clientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="reportes.jsp"><i class="fas fa-chart-bar me-2"></i> Reportes</a></li>
+                <li class="nav-item mt-4"><a class="nav-link text-danger" href="logout"><i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión</a></li>
             </ul>
         </nav>
 
@@ -91,7 +93,15 @@
                             <label class="form-label fw-bold">Apellidos</label>
                             <input type="text" class="form-control" name="apellidos" value="<%= cliente.getApellidos() %>" required>
                         </div>
-                        <div class="col-12">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Distrito</label>
+                            <select class="form-select" name="distrito" required>
+                                <% for(String d : distritos) { %>
+                                    <option value="<%= d %>" <%= d.equals(cliente.getDistrito()) ? "selected" : "" %>><%= d %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label fw-bold">Dirección</label>
                             <input type="text" class="form-control" name="direccion" value="<%= cliente.getDireccion() %>" required>
                         </div>

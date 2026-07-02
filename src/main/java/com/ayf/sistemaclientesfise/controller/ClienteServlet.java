@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,22 @@ public class ClienteServlet extends HttpServlet {
 
         String accion = request.getParameter("accion");
 
+        if ("buscar".equals(accion)) {
+            String query = request.getParameter("query");
+            List<Cliente> lista = clienteDAO.buscarClientes(query != null ? query : "");
+            request.setAttribute("listaClientes", lista);
+            request.getRequestDispatcher("tablaClientes.jsp").forward(request, response);
+            return;
+        }
+
         if ("eliminar".equals(accion)) {
+            // CANDADO DE SEGURIDAD BACKEND: Si no es Administrador, se le deniega la acción
+            if (!"Administrador".equals(usuario.getRol())) {
+                logger.warn("Intento de eliminación no autorizado por parte del usuario: {}", usuario.getUsername());
+                response.sendRedirect("cliente"); // Lo redirige de vuelta a la lista sin borrar nada
+                return;
+            }
+
             try {
                 int idCliente = Integer.parseInt(request.getParameter("id"));
                 clienteDAO.eliminarCliente(idCliente);
@@ -42,11 +58,31 @@ public class ClienteServlet extends HttpServlet {
             } catch (Exception e) {
                 logger.error("Error al eliminar cliente: {}", e.getMessage());
             }
-            response.sendRedirect("gestionClientes.jsp");
+            response.sendRedirect("cliente"); 
             return;
         }
 
-        response.sendRedirect("gestionClientes.jsp");
+        // FLUJO POR DEFECTO: Carga los primeros 15 registros y calcula la paginación
+        int pagina = 1;
+        int registrosPorPagina = 15;
+        
+        if (request.getParameter("page") != null) {
+            try {
+                pagina = Integer.parseInt(request.getParameter("page"));
+            } catch (NumberFormatException e) {
+                pagina = 1;
+            }
+        }
+        
+        List<Cliente> listaPaginada = clienteDAO.listarClientesPaginado(pagina, registrosPorPagina);
+        int totalRegistros = clienteDAO.contarClientes();
+        int totalPaginas = (int) Math.ceil((double) totalRegistros / registrosPorPagina);
+        
+        request.setAttribute("clientes", listaPaginada);
+        request.setAttribute("paginaActual", pagina);
+        request.setAttribute("totalPaginas", totalPaginas);
+        
+        request.getRequestDispatcher("gestionClientes.jsp").forward(request, response);
     }
 
     @Override
@@ -66,6 +102,7 @@ public class ClienteServlet extends HttpServlet {
         String nombres = request.getParameter("nombres");
         String apellidos = request.getParameter("apellidos");
         String direccion = request.getParameter("direccion");
+        String distrito = request.getParameter("distrito");
         String telefono = request.getParameter("telefono");
         String correo = request.getParameter("correo");
         String estado = request.getParameter("estado");
@@ -88,12 +125,12 @@ public class ClienteServlet extends HttpServlet {
         cliente.setNombres(nombres);
         cliente.setApellidos(apellidos);
         cliente.setDireccion(direccion);
+        cliente.setDistrito(distrito);
         cliente.setTelefono(telefono);
         cliente.setCorreo(correo);
         cliente.setEstado(estado);
         cliente.setObservacion(observacion);
         
-        // LÍNEA CORREGIDA: Se envía el ID del usuario activo para cumplir con la restricción de la BD
         cliente.setIdUsuario(usuario.getIdUsuario()); 
 
         try {
@@ -102,7 +139,7 @@ public class ClienteServlet extends HttpServlet {
                 cliente.setIdCliente(idCliente);
                 clienteDAO.actualizarCliente(cliente);
                 logger.info("Cliente actualizado correctamente. ID: {}", idCliente);
-                response.sendRedirect("gestionClientes.jsp");
+                response.sendRedirect("cliente");
 
             } else {
                 clienteDAO.registrarCliente(cliente);

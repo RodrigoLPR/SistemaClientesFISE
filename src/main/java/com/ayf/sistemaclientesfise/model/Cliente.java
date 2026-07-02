@@ -7,6 +7,7 @@ public class Cliente {
     private String nombres;
     private String apellidos;
     private String direccion;
+    private String distrito; // Nuevo campo
     private String telefono;
     private String correo;
     private String estado;
@@ -18,7 +19,7 @@ public class Cliente {
     }
 
     public Cliente(int idCliente, String dni, String nombres,
-            String apellidos, String direccion,
+            String apellidos, String direccion, String distrito,
             String telefono, String correo,
             String estado, String observacion,
             String fechaRegistro, int idUsuario) {
@@ -28,6 +29,7 @@ public class Cliente {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.direccion = direccion;
+        this.distrito = distrito; // Nuevo campo
         this.telefono = telefono;
         this.correo = correo;
         this.estado = estado;
@@ -36,92 +38,39 @@ public class Cliente {
         this.idUsuario = idUsuario;
     }
 
-    public int getIdCliente() {
-        return idCliente;
-    }
+    public int getIdCliente() { return idCliente; }
+    public void setIdCliente(int idCliente) { this.idCliente = idCliente; }
 
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
-    }
+    public String getDni() { return dni; }
+    public void setDni(String dni) { this.dni = dni; }
 
-    public String getDni() {
-        return dni;
-    }
+    public String getNombres() { return nombres; }
+    public void setNombres(String nombres) { this.nombres = nombres; }
 
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
+    public String getApellidos() { return apellidos; }
+    public void setApellidos(String apellidos) { this.apellidos = apellidos; }
 
-    public String getNombres() {
-        return nombres;
-    }
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
+    public String getDistrito() { return distrito; }
+    public void setDistrito(String distrito) { this.distrito = distrito; }
 
-    public String getApellidos() {
-        return apellidos;
-    }
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
 
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
+    public String getCorreo() { return correo; }
+    public void setCorreo(String correo) { this.correo = correo; }
 
-    public String getDireccion() {
-        return direccion;
-    }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
+    public String getObservacion() { return observacion; }
+    public void setObservacion(String observacion) { this.observacion = observacion; }
 
-    public String getTelefono() {
-        return telefono;
-    }
+    public String getFechaRegistro() { return fechaRegistro; }
+    public void setFechaRegistro(String fechaRegistro) { this.fechaRegistro = fechaRegistro; }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getObservacion() {
-        return observacion;
-    }
-
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
-    }
-
-    public String getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(String fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
-    public int getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
+    public int getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 }

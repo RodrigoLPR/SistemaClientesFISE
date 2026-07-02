@@ -36,4 +36,22 @@ public class UsuarioDAO {
 
         return usuario;
     }
+    
+    public boolean registrarUsuario(Usuario user) {
+    String sql = "INSERT INTO usuario (username, password, rol) VALUES (?, ?, ?)";
+    try (Connection conn = ConexionBD.obtenerConexion();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setString(1, user.getUsername());
+        ps.setString(2, user.getPassword());
+        ps.setString(3, "Asesor"); // Todos los creados por esta pantalla serán Gestores/Asesores
+
+        int filasAfectadas = ps.executeUpdate();
+        return filasAfectadas > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+    
 }

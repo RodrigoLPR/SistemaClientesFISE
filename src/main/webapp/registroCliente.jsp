@@ -6,6 +6,18 @@
         response.sendRedirect("login.jsp");
         return;
     }
+    
+    // Arreglo con los 43 distritos de Lima Metropolitana
+    String[] distritos = {
+        "Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Chaclacayo", "Chorrillos", 
+        "Cieneguilla", "Comas", "El Agustino", "Independencia", "Jesús María", "La Molina", 
+        "La Victoria", "Lima", "Lince", "Los Olivos", "Lurigancho", "Lurín", "Magdalena del Mar", 
+        "Miraflores", "Pachacámac", "Pucusana", "Pueblo Libre", "Puente Piedra", "Punta Hermosa", 
+        "Punta Negra", "Rímac", "San Bartolo", "San Borja", "San Isidro", "San Juan de Lurigancho", 
+        "San Juan de Miraflores", "San Luis", "San Martín de Porres", "San Miguel", "Santa Anita", 
+        "Santa María del Mar", "Santa Rosa", "Santiago de Surco", "Surquillo", "Villa El Salvador", 
+        "Villa María del Triunfo"
+    };
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -19,7 +31,7 @@
         body { background-color: #f8f9fa; }
         .sidebar { min-height: 100vh; background-color: #1e3a8a; }
         .sidebar a { color: #cfd8dc; transition: 0.3s; }
-        .sidebar a:hover { color: #ffffff; background-color: rgba(255,255,255,0.1); border-radius: 5px;}
+        .sidebar a:hover, .sidebar a.active { color: #ffffff; background-color: rgba(255,255,255,0.1); border-radius: 5px;}
         .form-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     </style>
 </head>
@@ -35,7 +47,12 @@
             <ul class="nav flex-column gap-2 mt-4">
                 <li class="nav-item"><a class="nav-link" href="dashboard.jsp"><i class="fas fa-home me-2"></i> Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link active text-white fw-bold" href="registroCliente.jsp"><i class="fas fa-user-plus me-2"></i> Registrar Cliente</a></li>
-                <li class="nav-item"><a class="nav-link" href="gestionClientes.jsp"><i class="fas fa-users me-2"></i> Gestión de Clientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="cliente"><i class="fas fa-users me-2"></i> Gestión de Clientes</a></li>
+                
+                <% if (usuario != null && "Administrador".equals(usuario.getRol())) { %>
+                    <li class="nav-item"><a class="nav-link" href="usuario"><i class="fas fa-user-gear me-2"></i> Registrar Gestor</a></li>
+                <% } %>
+                
                 <li class="nav-item"><a class="nav-link" href="reportes.jsp"><i class="fas fa-chart-bar me-2"></i> Reportes</a></li>
                 <li class="nav-item mt-4"><a class="nav-link text-danger" href="logout"><i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión</a></li>
             </ul>
@@ -72,7 +89,16 @@
                             <label class="form-label fw-bold">Apellidos</label>
                             <input type="text" class="form-control" name="apellidos" required>
                         </div>
-                        <div class="col-12">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Distrito</label>
+                            <select class="form-select" name="distrito" required>
+                                <option value="" selected disabled>Seleccione un distrito...</option>
+                                <% for(String d : distritos) { %>
+                                    <option value="<%= d %>"><%= d %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label fw-bold">Dirección</label>
                             <input type="text" class="form-control" name="direccion" required>
                         </div>
@@ -100,7 +126,6 @@
         </main>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
