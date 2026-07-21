@@ -38,9 +38,9 @@ public class ConsultaServlet extends HttpServlet {
         }
 
         List<Cliente> clientesEncontrados = new ArrayList<>();
-        String sql = "SELECT id_cliente, dni, nombres, apellidos, direccion, distrito, telefono, correo, estado, observacion, fecha_registro FROM cliente WHERE dni = ?";
+        String sql = "SELECT id_cliente, dni, nombres, apellidos, direccion, distrito, "
+                + "telefono, correo, estado, observacion, fecha_registro FROM cliente WHERE dni = ?";
 
-        // Bloque con recursos robusto utilizando el método real de tu arquitectura
         try (Connection conn = ConexionBD.obtenerConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
@@ -60,7 +60,6 @@ public class ConsultaServlet extends HttpServlet {
                     c.setEstado(rs.getString("estado"));
                     c.setObservacion(rs.getString("observacion"));
                     
-                    // Extraído como String compatible con el tipo declarado en tu entidad
                     c.setFechaRegistro(rs.getString("fecha_registro"));
                     
                     clientesEncontrados.add(c);
